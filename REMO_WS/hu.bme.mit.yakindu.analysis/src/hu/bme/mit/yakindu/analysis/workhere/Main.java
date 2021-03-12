@@ -1,5 +1,7 @@
 package hu.bme.mit.yakindu.analysis.workhere;
 
+import java.util.Random;
+
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EObject;
 import org.junit.Test;
@@ -25,12 +27,34 @@ public class Main {
 		// Reading model
 		Statechart s = (Statechart) root;
 		TreeIterator<EObject> iterator = s.eAllContents();
+		//2.3as
+		State prevstate = null;
+		//2.4es
+		int zero = 0;
 		while (iterator.hasNext()) {
 			EObject content = iterator.next();
+		
 			if(content instanceof State) {
 				State state = (State) content;
-				System.out.println(state.getName());
-			}
+				//2.3as feladat
+				if(prevstate != null) {
+					System.out.println(prevstate.getName() + " -> " + state.getName());
+				} 
+				prevstate = state;
+				
+				//2.4es feladat
+				if(state.getOutgoingTransitions().size() == zero) {
+					System.out.println("Trap state: " + state.getName());
+				}
+				
+				//2.5os feladat
+				if(state.getName().equals("empty")) {
+					Random rand = new Random();
+					int myrand = rand.nextInt(100);
+					state.setName("MyState" + myrand);
+					System.out.println(state.getName());
+				}
+			}		
 		}
 		
 		// Transforming the model into a graph representation
